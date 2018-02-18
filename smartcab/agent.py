@@ -87,9 +87,15 @@ class LearningAgent(Agent):
         if state in self.Q:
             temp = self.Q[state]
             maxQ = max(temp, key=lambda key: temp[key])
+            ## THIRD SUBMISSION CHANGES - fixing tiebreaker ##
+            tiebreaker = []
+            tiebreaker.append(maxQ)
             for key, value in temp.iteritems():
                 if temp[maxQ] == value:
-                    maxQ = random.choice([maxQ, key])
+                    # maxQ = random.choice([maxQ, key])
+                    tiebreaker.append(value)
+            if tiebreaker.count < 1:
+                maxQ  = random.choice(tiebreaker)
         else:
             maxQ = random.choice(self.valid_actions)
 
