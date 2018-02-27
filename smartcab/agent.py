@@ -84,20 +84,9 @@ class LearningAgent(Agent):
 
         maxQ = None
 
-        if state in self.Q:
-            temp = self.Q[state]
-            maxQ = max(temp, key=lambda key: temp[key])
-            ## THIRD SUBMISSION CHANGES - fixing tiebreaker ##
-            tiebreaker = []
-            tiebreaker.append(maxQ)
-            for key, value in temp.iteritems():
-                if temp[maxQ] == value:
-                    # maxQ = random.choice([maxQ, key])
-                    tiebreaker.append(value)
-            if tiebreaker.count < 1:
-                maxQ  = random.choice(tiebreaker)
-        else:
-            maxQ = random.choice(self.valid_actions)
+        temp = self.Q[state]
+        maxQ = max(temp, key=lambda x: temp[x])
+        maxQ = random.choice([ac for ac in self.valid_actions if temp[ac] == temp[maxQ]])
 
         return maxQ 
 
@@ -135,13 +124,21 @@ class LearningAgent(Agent):
         # Otherwise, choose an action with the highest Q-value for the current state
         # Be sure that when choosing an action with highest Q-value that you randomly select between actions that "tie".
 
+        ###############################################################################
+        # if self.learning:
+        #     if random.random() < self.epsilon:
+        #         action = random.choice(self.valid_actions)
+        #     else:
+        #         action = self.get_maxQ(state)
+        # else:
+        #     action = random.choice(self.valid_actions)
+
+        # return action
+        ###############################################################################
+
         if self.learning:
-            if random.random() < self.epsilon:
-                action = random.choice(self.valid_actions)
-            else:
+            if random.random() >= self.epsilon:
                 action = self.get_maxQ(state)
-        else:
-            action = random.choice(self.valid_actions)
 
         return action
 
